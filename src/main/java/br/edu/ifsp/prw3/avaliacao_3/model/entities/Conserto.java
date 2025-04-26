@@ -1,6 +1,7 @@
 package br.edu.ifsp.prw3.avaliacao_3.model.entities;
 
 import br.edu.ifsp.prw3.avaliacao_3.model.dto.ConsertoDTO;
+import br.edu.ifsp.prw3.avaliacao_3.model.dto.PutConsertoRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -32,4 +33,8 @@ public class Conserto {
         this.veiculo = new Veiculo(dto.veiculo());
     }
 
+    public void atualizarInformacoes(PutConsertoRequestDTO dto) {
+        if (dto.dataSaida() != null) this.dataSaida = dto.dataSaida();
+        if (dto.mecanico() != null) this.mecanico.atualizarInformacoes(dto.mecanico());
+    }
 }

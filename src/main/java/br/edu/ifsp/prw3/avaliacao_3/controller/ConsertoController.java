@@ -2,6 +2,8 @@ package br.edu.ifsp.prw3.avaliacao_3.controller;
 
 import br.edu.ifsp.prw3.avaliacao_3.model.dto.ConsertoDTO;
 import br.edu.ifsp.prw3.avaliacao_3.model.dto.ConsertoRelatorio;
+import br.edu.ifsp.prw3.avaliacao_3.model.dto.PutConsertoRequestDTO;
+import br.edu.ifsp.prw3.avaliacao_3.model.dto.PutConsertoResponseDTO;
 import br.edu.ifsp.prw3.avaliacao_3.model.entities.Conserto;
 import br.edu.ifsp.prw3.avaliacao_3.repository.ConsertoRepository;
 import jakarta.transaction.Transactional;
@@ -46,7 +48,17 @@ public class ConsertoController {
     public ResponseEntity<Conserto> getById(@PathVariable Long id) {
         Optional<Conserto> conserto = repository.findById(id);
         return conserto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
     }
 
+    @PutMapping
+    @Transactional
+    public ResponseEntity<Object> atualizar(@RequestBody @Valid PutConsertoRequestDTO dto) {
+        Optional<Conserto> conserto = repository.findById(dto.id());
+
+        if (conserto.isPresent()) {
+            conserto.get().atualizarInformacoes(dto);
+            return ResponseEntity.ok(new PutConsertoResponseDTO(conserto.get()));
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
