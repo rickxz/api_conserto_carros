@@ -1,14 +1,19 @@
 package br.edu.ifsp.prw3.avaliacao_3.controller;
 
 import br.edu.ifsp.prw3.avaliacao_3.model.dto.ConsertoDTO;
+import br.edu.ifsp.prw3.avaliacao_3.model.dto.ConsertoRelatorio;
 import br.edu.ifsp.prw3.avaliacao_3.model.entities.Conserto;
 import br.edu.ifsp.prw3.avaliacao_3.repository.ConsertoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/conserto")
@@ -23,4 +28,17 @@ public class ConsertoController {
         Conserto consertoSalvo = repository.save(new Conserto(dto));
         return new ResponseEntity<>(consertoSalvo, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<Page<Conserto>> list(Pageable pageable) {
+        Page<Conserto> consertos = repository.findAll(pageable);
+        return ResponseEntity.ok(consertos);
+    }
+
+    @GetMapping("relatorio")
+    public ResponseEntity<List<ConsertoRelatorio>> relatorio() {
+        List<ConsertoRelatorio> consertos = repository.findAll().stream().map(ConsertoRelatorio::new).toList();
+        return ResponseEntity.ok(consertos);
+    }
+
 }
