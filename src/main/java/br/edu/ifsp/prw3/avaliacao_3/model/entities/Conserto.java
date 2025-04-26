@@ -23,6 +23,7 @@ public class Conserto {
     private Mecanico mecanico;
     @Embedded
     private Veiculo veiculo;
+    private boolean ativo = true;
 
     public Conserto(ConsertoDTO dto) {
         this.dataEntrada = dto.dataEntrada();
