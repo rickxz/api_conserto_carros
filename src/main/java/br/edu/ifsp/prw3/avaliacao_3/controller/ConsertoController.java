@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/conserto")
@@ -39,6 +40,13 @@ public class ConsertoController {
     public ResponseEntity<List<ConsertoRelatorio>> relatorio() {
         List<ConsertoRelatorio> consertos = repository.findAllByAtivoTrue().stream().map(ConsertoRelatorio::new).toList();
         return ResponseEntity.ok(consertos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Conserto> getById(@PathVariable Long id) {
+        Optional<Conserto> conserto = repository.findById(id);
+        return conserto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 
 }
