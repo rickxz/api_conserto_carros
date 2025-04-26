@@ -14,12 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/conserto")
+@RequestMapping("/consertos")
 public class ConsertoController {
 
     @Autowired
@@ -27,9 +28,12 @@ public class ConsertoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Conserto> post(@RequestBody @Valid ConsertoDTO dto) {
+    public ResponseEntity post(@RequestBody @Valid ConsertoDTO dto,
+                                         UriComponentsBuilder uriBuilder) {
         Conserto consertoSalvo = repository.save(new Conserto(dto));
-        return new ResponseEntity<>(consertoSalvo, HttpStatus.CREATED);
+
+        var uri = uriBuilder.path("/consertos/{id}").buildAndExpand(consertoSalvo.getId()).toUri();
+        return ResponseEntity.created(uri).body(consertoSalvo);
     }
 
     @GetMapping
@@ -59,6 +63,18 @@ public class ConsertoController {
             conserto.get().atualizarInformacoes(dto);
             return ResponseEntity.ok(new PutConsertoResponseDTO(conserto.get()));
         }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Object> excluir(@PathVariable Long id) {
+        Optional<Conserto> conserto = repository.findById(id);
+        if (conserto.isPresent()) {
+            conserto.get().excluir();
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.notFound().build();
     }
 }

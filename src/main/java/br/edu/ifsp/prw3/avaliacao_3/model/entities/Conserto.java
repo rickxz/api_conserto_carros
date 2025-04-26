@@ -37,4 +37,8 @@ public class Conserto {
         if (dto.dataSaida() != null) this.dataSaida = dto.dataSaida();
         if (dto.mecanico() != null) this.mecanico.atualizarInformacoes(dto.mecanico());
     }
+
+    public void excluir () {
+        this.ativo = false;
+    }
 }
