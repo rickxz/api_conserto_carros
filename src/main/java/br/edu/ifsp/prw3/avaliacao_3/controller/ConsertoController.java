@@ -37,7 +37,7 @@ public class ConsertoController {
 
     @GetMapping("relatorio")
     public ResponseEntity<List<ConsertoRelatorio>> relatorio() {
-        List<ConsertoRelatorio> consertos = repository.findAll().stream().map(ConsertoRelatorio::new).toList();
+        List<ConsertoRelatorio> consertos = repository.findAllByAtivoTrue().stream().map(ConsertoRelatorio::new).toList();
         return ResponseEntity.ok(consertos);
     }
 
